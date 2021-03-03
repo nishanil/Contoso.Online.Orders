@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  contosoonlineorders.api:
+    image: ${DOCKER_REGISTRY-}contosoonlineordersapi
+    build:
+      context: .
+      dockerfile: ContosoOnlineOrders.Api/Dockerfile

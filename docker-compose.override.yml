@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  contosoonlineorders.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__ContosoOrdersConnectionString=${AZURE_COSMOS_DB_CONNC_STR:-AccountEndpoint=<COSMOS_ACCOUNT_DB_ENDPOINT>;AccountKey=<YOUR-ACCOUNT-KEY>}
+    ports:
+      - "5000:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
