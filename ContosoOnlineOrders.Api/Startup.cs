@@ -34,11 +34,14 @@ namespace ContosoOnlineOrders.Api
         {
             //services.AddMemoryCache();
             //services.AddSingleton<IStoreDataService, MemoryCachedStoreServices>();
+
             services.AddCosmosDbStorage(Configuration.GetConnectionString("ContosoOrdersConnectionString"));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.AddServer(new OpenApiServer { Url = "http://localhost:5000" });
+                // Commenting out for the AKS public API URL
+                //c.AddServer(new OpenApiServer { Url = "http://0.0.0.0:5000" });
+
                 c.OperationFilter<SwaggerDefaultValues>();
             });
             services.AddApiVersioning();

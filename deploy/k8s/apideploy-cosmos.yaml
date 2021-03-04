@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contosoonlineordersapi-cosmos
+  labels:
+    app: contosoonlineordersapi-cosmos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: contosoonlineordersapi-cosmos
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: contosoonlineordersapi-cosmos
+    spec:
+      containers:
+      - name: contosoonlineordersapi-cosmos
+        image: sughosneo/contosoonlineordersapi-cosmos:latest        
+        ports:
+        - containerPort: 80
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development        
+        - name: ConnectionStrings__ContosoOrdersConnectionString
+          value: AccountEndpoint=<COSMOS_ACCOUNT_DB_ENDPOINT>;AccountKey=<YOUR-ACCOUNT-KEY>
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: contosoonlineordersapi-cosmos
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: contosoonlineordersapi-cosmos

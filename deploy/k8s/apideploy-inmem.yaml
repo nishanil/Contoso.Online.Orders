@@ -1,0 +1,41 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contosoonlineordersapi-inmem
+  labels:
+    app: contosoonlineordersapi-inmem
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: contosoonlineordersapi-inmem
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: contosoonlineordersapi-inmem
+    spec:
+      containers:
+      - name: contosoonlineordersapi-inmem
+        image: sughosneo/contosoonlineordersapi-inmem:latest        
+        ports:
+        - containerPort: 80
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: contosoonlineordersapi-inmem
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: contosoonlineordersapi-inmem
