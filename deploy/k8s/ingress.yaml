@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: online-order-api
+  labels:
+    app: contoso
+    service: online-order-api  
+spec:
+  rules:
+  - http:
+      paths:         
+      - path: /dev
+        pathType: Prefix
+        backend:
+          service:
+            name: online-order-api-dev
+            port: 
+              number: 80
+  - http:
+      paths:         
+      - path: /prod
+        pathType: Prefix
+        backend:
+          service:
+            name: online-order-api-prod
+            port: 
+              number: 80

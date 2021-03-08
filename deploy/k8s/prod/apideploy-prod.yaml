@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: online-order-api-prod
+  labels:
+    app: contoso
+    service: online-order-api-prod   
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: online-order-api-prod
+  template:
+    metadata:
+      labels:
+        app: contoso
+        service: online-order-api-prod
+    spec:
+      containers:
+      - name: online-order-api-prod
+        image: sughosneo/contosoonlineordersapi-prod:latest 
+        ports:
+        - containerPort: 80
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: ConnectionStrings__ContosoOrdersConnectionString
+          value: AccountEndpoint=<COSMOS_ACCOUNT_DB_ENDPOINT>;AccountKey=<YOUR-ACCOUNT-KEY>
+        - name: PATH_BASE
+          value: /prod
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: online-order-api-prod
+  labels:
+    app: contoso
+    service: online-order-api-prod
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      name: http    
+  selector:
+    service: online-order-api-prod

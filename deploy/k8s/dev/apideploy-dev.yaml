@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: online-order-api-dev
+  labels:
+    app: contoso
+    service: online-order-api-dev   
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: online-order-api-dev 
+  template:
+    metadata:
+      labels:
+        app: contoso
+        service: online-order-api-dev
+    spec:
+      containers:
+      - name: online-order-api-dev
+        image: sughosneo/contosoonlineordersapi-dev:latest        
+        ports:
+        - containerPort: 80
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: PATH_BASE
+          value: /dev
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: online-order-api-dev
+  labels:
+    app: contoso
+    service: online-order-api-dev
+spec:  
+  ports:
+    - port: 80
+      protocol: TCP
+      name: http    
+  selector:
+    service: online-order-api-dev

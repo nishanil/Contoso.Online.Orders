@@ -32,13 +32,13 @@ namespace ContosoOnlineOrders.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddMemoryCache();
-            //services.AddSingleton<IStoreDataService, MemoryCachedStoreServices>();
-            services.AddCosmosDbStorage(Configuration.GetConnectionString("ContosoOrdersConnectionString"));
+            services.AddMemoryCache();
+            services.AddSingleton<IStoreDataService, MemoryCachedStoreServices>();
+
+            //services.AddCosmosDbStorage(Configuration.GetConnectionString("ContosoOrdersConnectionString"));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.AddServer(new OpenApiServer { Url = "http://localhost:5000" });
                 c.OperationFilter<SwaggerDefaultValues>();
             });
             services.AddApiVersioning();
@@ -55,6 +55,12 @@ namespace ContosoOnlineOrders.Api
             IWebHostEnvironment env,
             IApiVersionDescriptionProvider provider)
         {
+            var pathBase = Configuration["PATH_BASE"];
+            if (!string.IsNullOrEmpty(pathBase))
+            {
+                app.UsePathBase(pathBase);
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -65,11 +71,11 @@ namespace ContosoOnlineOrders.Api
                     var versionDescriptions = provider.ApiVersionDescriptions;
                     foreach (var description in provider.ApiVersionDescriptions.OrderByDescending(_ => _.ApiVersion))
                     {
-                        c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", $"Contoso Online Orders {description.GroupName}");
+                        c.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/{description.GroupName}/swagger.json", $"Contoso Online Orders {description.GroupName}");
                     }
                 });
             }
-
+            
             app.UseRouting();
 
             app.UseAuthorization();
