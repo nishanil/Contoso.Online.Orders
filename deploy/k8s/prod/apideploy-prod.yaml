@@ -29,6 +29,8 @@ spec:
           value: AccountEndpoint=<COSMOS_ACCOUNT_DB_ENDPOINT>;AccountKey=<YOUR-ACCOUNT-KEY>
         - name: PATH_BASE
           value: /prod
+        - name: ENV
+          value: Prod
 ---
 apiVersion: v1
 kind: Service

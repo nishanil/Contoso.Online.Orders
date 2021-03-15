@@ -27,6 +27,8 @@ spec:
           value: Development
         - name: PATH_BASE
           value: /dev
+        - name: ENV
+          value: Dev
 ---
 apiVersion: v1
 kind: Service

@@ -9,6 +9,15 @@ spec:
   rules:
   - http:
       paths:         
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: online-order-api-dev
+            port: 
+              number: 80
+  - http:
+      paths:         
       - path: /dev
         pathType: Prefix
         backend:
