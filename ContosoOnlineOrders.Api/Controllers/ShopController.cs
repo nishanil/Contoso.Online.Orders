@@ -1,6 +1,8 @@
 using ContosoOnlineOrders.Abstractions;
 using ContosoOnlineOrders.Abstractions.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
@@ -18,8 +20,14 @@ namespace ContosoOnlineOrders.Api.Controllers
     public class ShopController : ControllerBase
     {
         private readonly IStoreDataService _storeServices;
+        ILogger<ShopController> _logger;
 
-        public ShopController(IStoreDataService storeServices) => _storeServices = storeServices;
+        public ShopController(IStoreDataService storeServices, ILogger<ShopController> logger) 
+        { 
+            _storeServices = storeServices;
+            _logger = logger; 
+
+        }
 
         [HttpPost("/orders", Name = nameof(CreateOrder))]
         public async Task<ActionResult<Order>> CreateOrder(Order order)
@@ -40,8 +48,12 @@ namespace ContosoOnlineOrders.Api.Controllers
         }
 
         [HttpGet("/products", Name = nameof(GetProducts))]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts() =>
-            Ok(await _storeServices.GetProductsAsync());
+        public async Task<ActionResult<IEnumerable<Product>>> GetProducts() {
+          
+          _logger.Log(LogLevel.Information, Environment.OSVersion.VersionString);
+          
+          return  Ok(await _storeServices.GetProductsAsync());
+        }
 
         [HttpGet("/products/page/{page}", Name = nameof(GetProductsPage))]
         [MapToApiVersion("1.1")]
